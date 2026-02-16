@@ -9,14 +9,18 @@
       </NuxtLink>
     </div>
 
-    <!-- Skeleton -->
-    <div v-if="loading" class="flex gap-4 overflow-hidden">
-      <div
+    <!-- Skeleton: 슬라이드와 동일한 고정 너비·간격(spaceBetween 16px)으로 레이아웃 시프트 방지 -->
+    <div
+      v-if="loading"
+      class="flex overflow-hidden"
+      :style="{ gap: `${spaceBetween}px` }"
+    >
+      <CommonSkeletonLoader
         v-for="i in skeletonCount"
         :key="i"
-        class="flex-shrink-0 rounded-lg animate-pulse-skeleton"
-        :class="isVideo ? 'w-64 md:w-80 aspect-video' : 'w-28 md:w-36 lg:w-40 aspect-[2/3]'"
-        :style="{ backgroundColor: 'rgba(255,255,255,0.08)' }"
+        variant="custom"
+        class="shrink-0 rounded-lg"
+        :class="isVideo ? '!w-64 md:!w-80 aspect-video' : '!w-28 md:!w-36 lg:!w-40 aspect-[2/3]'"
       />
     </div>
 

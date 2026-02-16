@@ -37,14 +37,67 @@
     <div class="relative -mt-16 md:-mt-24 z-20">
       <div class="max-w-screen-xl mx-auto px-4 md:px-6">
         <div class="glass-dark rounded-t-3xl p-6 md:p-10">
-          <!-- Loading Skeleton -->
-          <div v-if="loading" class="space-y-6">
-            <div class="flex gap-6">
-              <CommonSkeletonLoader variant="custom" class="w-40 md:w-52 aspect-[2/3] rounded-xl shrink-0" />
-              <div class="flex-1 space-y-4">
-                <CommonSkeletonLoader variant="custom" class="h-8 w-3/4" />
-                <CommonSkeletonLoader variant="custom" class="h-12 w-full" />
-                <CommonSkeletonLoader variant="custom" class="h-32 w-full" />
+          <!-- Loading Skeleton (실제 데이터 레이아웃과 동일 너비/높이) -->
+          <div v-if="loading" class="space-y-10">
+            <!-- 상단: 포스터 + 제목/설명 영역 -->
+            <div class="flex flex-col md:flex-row gap-6 md:gap-10">
+              <CommonSkeletonLoader variant="custom" class="w-40 md:w-52 aspect-[2/3] rounded-2xl shrink-0 mx-auto md:mx-0" />
+              <div class="flex-1 min-w-0 space-y-4">
+                <CommonSkeletonLoader variant="custom" class="h-8 md:h-9 w-3/4 max-w-md" />
+                <CommonSkeletonLoader variant="custom" class="h-4 w-1/2" />
+                <div class="flex gap-3 mt-4">
+                  <CommonSkeletonLoader variant="custom" class="w-9 h-9 rounded-full shrink-0" />
+                  <CommonSkeletonLoader variant="custom" class="w-9 h-9 rounded-full shrink-0" />
+                  <CommonSkeletonLoader variant="custom" class="w-9 h-9 rounded-full shrink-0" />
+                </div>
+                <div class="mt-6 space-y-2">
+                  <CommonSkeletonLoader variant="custom" class="h-3 w-full" />
+                  <CommonSkeletonLoader variant="custom" class="h-3 w-full" />
+                  <CommonSkeletonLoader variant="custom" class="h-3 w-4/5" />
+                </div>
+              </div>
+            </div>
+            <!-- 하단: 메타(개봉일/장르/시간/평점) + 관련영상/출연진/리뷰 -->
+            <div class="flex flex-col lg:flex-row gap-8 mt-10">
+              <div class="lg:w-52 shrink-0 space-y-3">
+                <div class="flex justify-between gap-2">
+                  <CommonSkeletonLoader variant="custom" class="h-4 w-14 shrink-0" />
+                  <CommonSkeletonLoader variant="custom" class="h-4 w-24" />
+                </div>
+                <div class="flex justify-between gap-2">
+                  <CommonSkeletonLoader variant="custom" class="h-4 w-10 shrink-0" />
+                  <CommonSkeletonLoader variant="custom" class="h-4 w-28" />
+                </div>
+                <div class="flex justify-between gap-2">
+                  <CommonSkeletonLoader variant="custom" class="h-4 w-10 shrink-0" />
+                  <CommonSkeletonLoader variant="custom" class="h-4 w-16" />
+                </div>
+                <div class="flex justify-between gap-2 items-center">
+                  <CommonSkeletonLoader variant="custom" class="h-4 w-10 shrink-0" />
+                  <CommonSkeletonLoader variant="custom" class="h-4 w-10 rounded" />
+                </div>
+              </div>
+              <div class="flex-1 min-w-0 space-y-8">
+                <div>
+                  <CommonSkeletonLoader variant="custom" class="h-6 w-24 mb-4" />
+                  <div class="flex gap-3 overflow-hidden">
+                    <CommonSkeletonLoader v-for="i in 5" :key="i" variant="custom" class="w-28 md:w-36 aspect-[2/3] rounded-lg shrink-0" />
+                  </div>
+                </div>
+                <div>
+                  <CommonSkeletonLoader variant="custom" class="h-6 w-20 mb-4" />
+                  <div class="flex gap-3 overflow-hidden">
+                    <CommonSkeletonLoader v-for="i in 5" :key="i" variant="custom" class="w-24 md:w-32 aspect-[2/3] rounded-xl shrink-0" />
+                  </div>
+                </div>
+                <div>
+                  <CommonSkeletonLoader variant="custom" class="h-6 w-16 mb-4" />
+                  <div class="space-y-3">
+                    <CommonSkeletonLoader variant="custom" class="h-20 w-full rounded-xl" />
+                    <CommonSkeletonLoader variant="custom" class="h-20 w-full rounded-xl" />
+                    <CommonSkeletonLoader variant="custom" class="h-20 w-4/5 rounded-xl" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

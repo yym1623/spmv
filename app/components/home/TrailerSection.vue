@@ -9,13 +9,13 @@
       <div class="relative z-10 p-6 md:p-8">
         <h2 class="text-xl md:text-2xl font-bold text-white mb-6">최신 예고편</h2>
 
-        <!-- Skeleton -->
-        <div v-if="loading" class="flex gap-4 overflow-hidden">
-          <div
+        <!-- Skeleton: 실제 슬라이드와 동일 너비·높이 (!w-64 md:!w-80 aspect-video) -->
+        <div v-if="loading" class="flex overflow-hidden gap-4">
+          <CommonSkeletonLoader
             v-for="i in 4"
             :key="i"
-            class="flex-shrink-0 w-64 md:w-80 aspect-video rounded-xl animate-pulse-skeleton"
-            :style="{ backgroundColor: 'rgba(255,255,255,0.08)' }"
+            variant="custom"
+            class="shrink-0 !w-64 md:!w-80 aspect-video rounded-xl"
           />
         </div>
 
