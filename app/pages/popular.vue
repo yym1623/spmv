@@ -61,8 +61,8 @@ const router = useRouter()
 const tmdb = useTmdb()
 
 const tab = ref<'movie' | 'tv'>('movie')
-const items = ref<any[]>([])
-const genres = ref<{ id: number; name: string }[]>([])
+const items = ref<import('~/types/tmdb').MovieItem[]>([])
+const genres = ref<import('~/types/tmdb').Genre[]>([])
 const selectedGenre = ref<number | null>(null)
 const loading = ref(true)
 const currentPage = ref(1)
@@ -128,7 +128,7 @@ function loadMore() {
   }
 }
 
-function goDetail(item: any) {
+function goDetail(item: import('~/types/tmdb').MovieItem) {
   router.push(`/detail/${tab.value}-${item.id}`)
 }
 

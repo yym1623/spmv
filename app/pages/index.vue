@@ -39,14 +39,16 @@
 </template>
 
 <script setup lang="ts">
+import type { MovieItem, VideoResult } from '~/types/tmdb'
+
 useHead({ title: 'SPMV - 영화 및 TV프로그램' })
 
 const tmdb = useTmdb()
 
-const upcomingMovies = ref<any[]>([])
-const popularMovies = ref<any[]>([])
-const trendingMovies = ref<any[]>([])
-const trailerMovies = ref<any[]>([])
+const upcomingMovies = ref<MovieItem[]>([])
+const popularMovies = ref<MovieItem[]>([])
+const trendingMovies = ref<MovieItem[]>([])
+const trailerMovies = ref<MovieItem[]>([])
 
 const loadingUpcoming = ref(true)
 const loadingPopular = ref(true)
@@ -75,26 +77,31 @@ onMounted(async () => {
 
     // 최신 상영작 중 예고편이 있는 영화만 필터링 (최대 12개)
     const candidates = nowPlaying.results
-      .filter((m: any) => m.backdrop_path)
+      .filter((m: MovieItem) => m.backdrop_path)
       .slice(0, 12)
 
     const videoChecks = await Promise.allSettled(
-      candidates.map(async (movie: any) => {
+      candidates.map(async (movie: MovieItem) => {
         const videos = await tmdb.getMediaVideos('movie', movie.id)
         const trailer = videos.results.find(
-          (v: any) => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')
+          (v: VideoResult) => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')
         )
         return trailer ? movie : null
       })
     )
 
     const trailerResults = videoChecks
-      .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled' && r.value !== null)
+      .filter((r): r is PromiseFulfilledResult<MovieItem> => r.status === 'fulfilled' && r.value !== null)
       .map(r => r.value)
     // 랜덤 셔플
     for (let i = trailerResults.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1))
-      ;[trailerResults[i], trailerResults[j]] = [trailerResults[j], trailerResults[i]]
+      const a = trailerResults[i]
+      const b = trailerResults[j]
+      if (a !== undefined && b !== undefined) {
+        trailerResults[i] = b
+        trailerResults[j] = a
+      }
     }
     trailerMovies.value = trailerResults
     loadingTrailers.value = false
@@ -105,10 +112,12 @@ onMounted(async () => {
       ...popular.results,
       ...trending.results,
       ...trailerMovies.value,
-    ].filter((m: any) => m.backdrop_path)
+    ].filter((m: MovieItem) => m.backdrop_path)
     if (allMovies.length) {
       const random = allMovies[Math.floor(Math.random() * allMovies.length)]
-      heroBg.value = tmdbImageUrl(random.backdrop_path, 'backdrop', 'original')
+      if (random?.backdrop_path) {
+        heroBg.value = tmdbImageUrl(random.backdrop_path, 'backdrop', 'original')
+      }
     }
   } catch (e) {
     console.error(e)

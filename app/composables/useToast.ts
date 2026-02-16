@@ -1,24 +1,10 @@
 /**
  * 커스텀 Toast / Confirm / Loading 시스템
- * TailwindCSS 기반 — 외부 라이브러리 없음
+ * 타입: ~/types/toast
  */
+import type { ToastType, ToastItem, ConfirmOptions } from '~/types/toast'
 
-// ─── Types ───────────────────────────────────────────
-export type ToastType = 'success' | 'error' | 'warning' | 'info'
-
-export interface ToastItem {
-  id: number
-  type: ToastType
-  title: string
-  duration: number
-}
-
-export interface ConfirmOptions {
-  title: string
-  text?: string
-  confirmText?: string
-  cancelText?: string
-}
+export type { ToastType, ToastItem, ConfirmOptions }
 
 // ─── Global Reactive State ───────────────────────────
 // 전역 상태 (모든 컴포넌트에서 공유)

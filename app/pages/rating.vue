@@ -42,11 +42,11 @@ const tmdb = useTmdb()
 const toast = useToast()
 
 const tab = ref<'movie' | 'tv'>('movie')
-const items = ref<any[]>([])
+const items = ref<import('~/types/tmdb').MovieItem[]>([])
 const loading = ref(true)
 
 const guestItems = computed(() =>
-  authStore.guestWatchlist.filter((f: any) => f.media_type === tab.value)
+  authStore.guestWatchlist.filter((f) => f.media_type === tab.value)
 )
 const displayItems = computed(() =>
   authStore.isGuest ? guestItems.value : items.value
@@ -80,7 +80,7 @@ function switchTab(newTab: 'movie' | 'tv') {
   fetchData()
 }
 
-function goDetail(item: any) {
+function goDetail(item: import('~/types/tmdb').MovieItem) {
   router.push(`/detail/${tab.value}-${item.id}`)
 }
 

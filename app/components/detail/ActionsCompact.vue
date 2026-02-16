@@ -71,10 +71,18 @@
 </template>
 
 <script setup lang="ts">
+import type { MovieItem } from '~/types/tmdb'
+
+interface GuestListItem {
+  id: number
+  media_type?: string
+  rating?: number
+}
+
 interface Props {
   mediaId: number
   mediaType: string
-  media?: any
+  media?: MovieItem
 }
 
 const props = defineProps<Props>()
@@ -205,7 +213,7 @@ const GUEST_FAVORITES_KEY = 'spmv_guest_favorites'
 const GUEST_WATCHLIST_KEY = 'spmv_guest_watchlist'
 const GUEST_RATINGS_KEY = 'spmv_guest_ratings'
 
-function parseGuestList(key: string): any[] {
+function parseGuestList(key: string): GuestListItem[] {
   if (!import.meta.client) return []
   try {
     const raw = localStorage.getItem(key)
@@ -225,13 +233,13 @@ function syncStateFromStore() {
     const favorites = parseGuestList(GUEST_FAVORITES_KEY)
     const watchlist = parseGuestList(GUEST_WATCHLIST_KEY)
     const ratings = parseGuestList(GUEST_RATINGS_KEY)
-    const same = (f: any) => Number(f.id) === id && (String(f.media_type || 'movie') === type)
+    const same = (f: GuestListItem) => Number(f.id) === id && (String(f.media_type || 'movie') === type)
     isFavorite.value = favorites.some(same)
     isWatchlisted.value = watchlist.some(same)
-    const rated = ratings.find((r: any) => same(r))
+    const rated = ratings.find((r: GuestListItem) => same(r))
     if (rated) {
       isRated.value = true
-      currentRating.value = Number((rated as any).rating) || 0
+      currentRating.value = Number(rated.rating) || 0
     } else {
       isRated.value = false
       currentRating.value = 0
@@ -246,13 +254,13 @@ function syncStateFromStore() {
         tmdb.getWatchlist(authStore.accountId!, authStore.sessionId!, type),
         tmdb.getRatedMedia(authStore.accountId!, authStore.sessionId!, type),
       ])
-      if (favRes.status === 'fulfilled') isFavorite.value = favRes.value.results.some((r: any) => r.id === id)
-      if (watchRes.status === 'fulfilled') isWatchlisted.value = watchRes.value.results.some((r: any) => r.id === id)
+      if (favRes.status === 'fulfilled') isFavorite.value = favRes.value.results.some((r: MovieItem) => r.id === id)
+      if (watchRes.status === 'fulfilled') isWatchlisted.value = watchRes.value.results.some((r: MovieItem) => r.id === id)
       if (ratedRes.status === 'fulfilled') {
-        const rated = ratedRes.value.results.find((r: any) => r.id === id)
+        const rated = ratedRes.value.results.find((r: MovieItem & { rating?: number }) => r.id === id)
         if (rated) {
           isRated.value = true
-          currentRating.value = (rated as any).rating
+          currentRating.value = rated.rating ?? 0
         } else {
           isRated.value = false
           currentRating.value = 0

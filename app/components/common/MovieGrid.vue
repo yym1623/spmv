@@ -30,15 +30,7 @@
 </template>
 
 <script setup lang="ts">
-interface MovieItem {
-  id: number
-  title?: string
-  name?: string
-  poster_path: string | null
-  backdrop_path?: string | null
-  vote_average?: number
-  media_type?: string
-}
+import type { MovieItem } from '~/types/tmdb'
 
 interface Props {
   items: MovieItem[]

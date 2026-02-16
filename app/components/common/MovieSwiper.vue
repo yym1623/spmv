@@ -50,6 +50,8 @@
 </template>
 
 <script setup lang="ts">
+import type { SwiperInstance } from '~/types/swiper'
+
 interface Props {
   title?: string
   moreLink?: string
@@ -69,7 +71,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const swiperContainer = ref<HTMLElement | null>(null)
-let swiperInstance: any = null
+let swiperInstance: SwiperInstance | null = null
 
 const canPrev = ref(false)
 const canNext = ref(false)
@@ -129,7 +131,7 @@ async function initSwiper() {
       resize: updateNavState,
       transitionEnd: updateNavState,
     },
-  })
+  }) as unknown as SwiperInstance
 }
 
 function destroySwiper() {

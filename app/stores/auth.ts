@@ -1,4 +1,8 @@
 import { defineStore } from 'pinia'
+import type { MovieItem } from '~/types/tmdb'
+
+/** 게스트 저장용 최소 아이템 (id, media_type 필수, rating은 평점 목록용) */
+export type GuestMediaItem = Pick<MovieItem, 'id' | 'media_type'> & Partial<Pick<MovieItem, 'title' | 'name' | 'poster_path'>> & { rating?: number }
 
 export const useAuthStore = defineStore('auth', () => {
   const tmdb = useTmdb()
@@ -17,9 +21,9 @@ export const useAuthStore = defineStore('auth', () => {
   const GUEST_RATINGS_KEY = 'spmv_guest_ratings'
 
   // 게스트 모드용 데이터 (ref로 두어 추가/삭제 시 바로 반영, 새로고침 불필요)
-  const guestFavoritesRef = ref<any[]>([])
-  const guestWatchlistRef = ref<any[]>([])
-  const guestRatingsRef = ref<any[]>([])
+  const guestFavoritesRef = ref<GuestMediaItem[]>([])
+  const guestWatchlistRef = ref<GuestMediaItem[]>([])
+  const guestRatingsRef = ref<GuestMediaItem[]>([])
 
   const guestFavorites = computed(() => (import.meta.client && isGuest.value ? guestFavoritesRef.value : []))
   const guestWatchlist = computed(() => (import.meta.client && isGuest.value ? guestWatchlistRef.value : []))
@@ -49,10 +53,10 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // 게스트 모드용 데이터 관리 (ref + localStorage 동기화 → 화면 바로 반영)
-  function saveGuestFavorite(item: any) {
+  function saveGuestFavorite(item: GuestMediaItem) {
     if (!import.meta.client) return
     const current = guestFavoritesRef.value
-    const exists = current.find((f: any) => f.id === item.id && f.media_type === item.media_type)
+    const exists = current.find((f) => f.id === item.id && f.media_type === item.media_type)
     const updated = exists ? current : [...current, item]
     guestFavoritesRef.value = updated
     localStorage.setItem(GUEST_FAVORITES_KEY, JSON.stringify(updated))
@@ -60,15 +64,15 @@ export const useAuthStore = defineStore('auth', () => {
 
   function removeGuestFavorite(itemId: number, mediaType: string) {
     if (!import.meta.client) return
-    const updated = guestFavoritesRef.value.filter((f: any) => !(f.id === itemId && f.media_type === mediaType))
+    const updated = guestFavoritesRef.value.filter((f) => !(f.id === itemId && f.media_type === mediaType))
     guestFavoritesRef.value = updated
     localStorage.setItem(GUEST_FAVORITES_KEY, JSON.stringify(updated))
   }
 
-  function saveGuestWatchlist(item: any) {
+  function saveGuestWatchlist(item: GuestMediaItem) {
     if (!import.meta.client) return
     const current = guestWatchlistRef.value
-    const exists = current.find((f: any) => f.id === item.id && f.media_type === item.media_type)
+    const exists = current.find((f) => f.id === item.id && f.media_type === item.media_type)
     const updated = exists ? current : [...current, item]
     guestWatchlistRef.value = updated
     localStorage.setItem(GUEST_WATCHLIST_KEY, JSON.stringify(updated))
@@ -76,15 +80,15 @@ export const useAuthStore = defineStore('auth', () => {
 
   function removeGuestWatchlist(itemId: number, mediaType: string) {
     if (!import.meta.client) return
-    const updated = guestWatchlistRef.value.filter((f: any) => !(f.id === itemId && f.media_type === mediaType))
+    const updated = guestWatchlistRef.value.filter((f) => !(f.id === itemId && f.media_type === mediaType))
     guestWatchlistRef.value = updated
     localStorage.setItem(GUEST_WATCHLIST_KEY, JSON.stringify(updated))
   }
 
-  function saveGuestRating(item: any) {
+  function saveGuestRating(item: GuestMediaItem) {
     if (!import.meta.client) return
     const current = guestRatingsRef.value
-    const exists = current.find((r: any) => r.id === item.id && r.media_type === item.media_type)
+    const exists = current.find((r) => r.id === item.id && r.media_type === item.media_type)
     const updated = exists ? current : [...current, item]
     guestRatingsRef.value = updated
     localStorage.setItem(GUEST_RATINGS_KEY, JSON.stringify(updated))
@@ -92,7 +96,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   function removeGuestRating(itemId: number, mediaType: string) {
     if (!import.meta.client) return
-    const updated = guestRatingsRef.value.filter((r: any) => !(r.id === itemId && r.media_type === mediaType))
+    const updated = guestRatingsRef.value.filter((r) => !(r.id === itemId && r.media_type === mediaType))
     guestRatingsRef.value = updated
     localStorage.setItem(GUEST_RATINGS_KEY, JSON.stringify(updated))
   }

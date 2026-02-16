@@ -58,7 +58,7 @@ function loadMore() {
   }
 }
 
-function goDetail(item: any) {
+function goDetail(item: import('~/types/tmdb').MovieItem) {
   const type = item.media_type || 'movie'
   router.push(`/detail/${type}-${item.id}`)
 }

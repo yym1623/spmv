@@ -2,63 +2,11 @@
  * TMDB API 컴포저블
  *
  * 모든 요청은 서버 API(/api/tmdb/...)를 경유한다.
- * → API 키가 클라이언트에 절대 노출되지 않음
- * → CORS 이슈 없음
- * → 서버에서 캐싱, 레이트리밋 등 추가 제어 가능
+ * 타입: ~/types/tmdb
  */
+import type { TmdbResponse, MovieItem, CastMember, Review, VideoResult, ExternalIds } from '~/types/tmdb'
 
-// ─── Types ───────────────────────────────────────────
-export interface TmdbResponse<T> {
-  results: T[]
-  page: number
-  total_pages: number
-  total_results: number
-}
-
-export interface MovieItem {
-  id: number
-  title?: string
-  name?: string
-  poster_path: string | null
-  backdrop_path: string | null
-  overview: string
-  release_date?: string
-  first_air_date?: string
-  vote_average: number
-  media_type?: string
-  genre_ids?: number[]
-  genres?: { id: number; name: string }[]
-  tagline?: string
-  runtime?: number
-  popularity: number
-}
-
-export interface CastMember {
-  id: number
-  name: string
-  character?: string
-  profile_path: string | null
-}
-
-export interface Review {
-  id: string
-  author: string
-  content: string
-  created_at: string
-}
-
-export interface VideoResult {
-  key: string
-  name: string
-  site: string
-  type: string
-}
-
-export interface ExternalIds {
-  instagram_id: string | null
-  facebook_id: string | null
-  twitter_id: string | null
-}
+export type { TmdbResponse, MovieItem, CastMember, Review, VideoResult, ExternalIds }
 
 // ─── Composable ──────────────────────────────────────
 export function useTmdb() {

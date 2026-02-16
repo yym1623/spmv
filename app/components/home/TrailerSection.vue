@@ -90,12 +90,8 @@
 </template>
 
 <script setup lang="ts">
-interface MovieItem {
-  id: number
-  title?: string
-  name?: string
-  backdrop_path: string | null
-}
+import type { MovieItem, VideoResult } from '~/types/tmdb'
+import type { SwiperInstance } from '~/types/swiper'
 
 interface Props {
   items: MovieItem[]
@@ -108,7 +104,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const tmdb = useTmdb()
 const swiperContainer = ref<HTMLElement | null>(null)
-let swiperInstance: any = null
+let swiperInstance: SwiperInstance | null = null
 
 const currentBg = ref('')
 const currentVideoKey = ref('')
@@ -150,11 +146,11 @@ async function openTrailer(movie: MovieItem) {
   try {
     const videos = await tmdb.getMediaVideos('movie', movie.id)
     const trailer = videos.results.find(
-      (v: any) => v.site === 'YouTube' && v.type === 'Trailer'
+      (v: VideoResult) => v.site === 'YouTube' && v.type === 'Trailer'
     ) || videos.results.find(
-      (v: any) => v.site === 'YouTube' && v.type === 'Teaser'
+      (v: VideoResult) => v.site === 'YouTube' && v.type === 'Teaser'
     ) || videos.results.find(
-      (v: any) => v.site === 'YouTube'
+      (v: VideoResult) => v.site === 'YouTube'
     )
     if (trailer) {
       currentVideoKey.value = trailer.key
@@ -191,7 +187,7 @@ async function initSwiper() {
       resize: updateNavState,
       transitionEnd: updateNavState,
     },
-  })
+  }) as unknown as SwiperInstance
 }
 
 watch(() => props.loading, (val) => {

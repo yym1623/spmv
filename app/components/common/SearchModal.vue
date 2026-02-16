@@ -166,6 +166,8 @@
 </template>
 
 <script setup lang="ts">
+import type { MovieItem } from '~/types/tmdb'
+
 const props = defineProps<{
   open: boolean
 }>()
@@ -182,7 +184,7 @@ const query = ref('')
 const isSearching = ref(false)
 const searched = ref(false)
 const activeIdx = ref(-1)
-const suggestions = ref<any[]>([])
+const suggestions = ref<MovieItem[]>([])
 const searchPosterErrored = reactive<Record<number, boolean>>({})
 const recentSearches = ref<string[]>([])
 
@@ -256,7 +258,7 @@ watch(query, (val) => {
     try {
       const res = await tmdb.searchMulti(t, 1)
       suggestions.value = res.results
-        .filter((item: any) => item.media_type === 'movie' || item.media_type === 'tv')
+        .filter((item) => item.media_type === 'movie' || item.media_type === 'tv')
         .slice(0, MAX_SUGGESTIONS)
       searched.value = true
     } catch {
@@ -284,8 +286,9 @@ async function search() {
   if (!t) return
 
   if (activeIdx.value >= 0) {
-    if (t && suggestions.value[activeIdx.value]) {
-      selectSuggestion(suggestions.value[activeIdx.value])
+    const suggestion = suggestions.value[activeIdx.value]
+    if (t && suggestion) {
+      selectSuggestion(suggestion)
       return
     }
     const recent = recentSearches.value[activeIdx.value]
@@ -300,7 +303,7 @@ async function search() {
   await router.push(`/search/${encodeURIComponent(t)}`)
 }
 
-function selectSuggestion(item: any) {
+function selectSuggestion(item: MovieItem) {
   const title = item.title || item.name || ''
   saveRecent(title)
   close()

@@ -131,7 +131,7 @@
                   </div>
                   <div class="flex items-start justify-between text-sm">
                     <span class="text-white/40 shrink-0">장르</span>
-                    <span class="text-white/80 break-words w-[130px] text-right">{{ detail.genres?.map((g: any) => g.name).join(', ') || '미정' }}</span>
+                    <span class="text-white/80 break-words w-[130px] text-right">{{ detail.genres?.map((g) => g.name).join(', ') || '미정' }}</span>
                   </div>
                   <div class="flex items-center justify-between text-sm">
                     <span class="text-white/40">시간</span>
@@ -239,6 +239,8 @@
 </template>
 
 <script setup lang="ts">
+import type { MovieItem, CastMember, Review, ExternalIds } from '~/types/tmdb'
+
 const route = useRoute()
 const router = useRouter()
 const tmdb = useTmdb()
@@ -248,11 +250,11 @@ const slug = computed(() => route.params.slug as string)
 const mediaType = computed(() => slug.value?.split('-')[0] ?? '')
 const mediaId = computed(() => Number(slug.value?.split('-').slice(1).join('-') ?? 0))
 
-const detail = ref<any>(null)
-const recommendations = ref<any[]>([])
-const cast = ref<any[]>([])
-const reviews = ref<any[]>([])
-const externalIds = ref<any>(null)
+const detail = ref<MovieItem | null>(null)
+const recommendations = ref<MovieItem[]>([])
+const cast = ref<CastMember[]>([])
+const reviews = ref<Review[]>([])
+const externalIds = ref<ExternalIds | null>(null)
 const videoKey = ref('')
 const videoPlaying = ref(false)
 const loading = ref(true)
@@ -297,7 +299,7 @@ async function loadData() {
   }
 }
 
-function goToDetail(movie: any) {
+function goToDetail(movie: MovieItem) {
   const type = movie.media_type || mediaType.value
   router.push(`/detail/${type}-${movie.id}`)
 }

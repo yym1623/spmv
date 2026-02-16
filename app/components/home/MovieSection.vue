@@ -105,15 +105,7 @@
 </template>
 
 <script setup lang="ts">
-interface MovieItem {
-  id: number
-  title?: string
-  name?: string
-  poster_path: string | null
-  backdrop_path: string | null
-  overview?: string
-  media_type?: string
-}
+import type { MovieItem } from '~/types/tmdb'
 
 interface Props {
   title: string
@@ -132,7 +124,7 @@ const router = useRouter()
 const tmdb = useTmdb()
 
 const selectedMovie = ref<MovieItem | null>(null)
-const detailData = ref<any>(null)
+const detailData = ref<MovieItem | null>(null)
 const previewPosterErrored = ref(false)
 
 async function handleClick(movie: MovieItem) {
