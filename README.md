@@ -3,11 +3,13 @@
 ![Preview](https://github.com/user-attachments/assets/9a82dafa-9ada-4629-95f7-180493bf4f6a)
 
 
+
 ## Tech Stack
 
-- **Frontend**: Nuxt 4, TypeScript, Vite, Tailwindcss, Pinia
+- **Frontend**: Nuxt4, TypeScript, Pinia, Tailwindcss, Vite
 - **Backend**: Nuxt Server (Nitro)
 - **Database**: Supabase(Postgresql)
+
 
 
 ## Project Structure
